@@ -1,0 +1,22 @@
+syntax = "proto2";
+package com.roger.protobuf;
+
+enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+}
+
+message PhoneNumber {
+    required PhoneType type = 1;
+    required string number = 2;
+}
+
+message Person {
+    required string name = 1;
+    required int64 id = 2;
+    required string email = 3;
+    optional string qqid = 4;
+
+    repeated PhoneNumber phones = 5;
+}

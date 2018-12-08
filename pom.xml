@@ -11,6 +11,8 @@
     <modules>
         <module>demoserver</module>
         <module>democlient</module>
+        <module>threadlocal</module>
+        <module>protobuf</module>
     </modules>
 
 
