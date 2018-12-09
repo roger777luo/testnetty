@@ -9,6 +9,8 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 public class ServerEnd {
     public void bind(int port) throws Exception {
@@ -19,6 +21,8 @@ public class ServerEnd {
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).
+//                    option(ChannelOption.SO_BACKLOG, 100).
+//                    handler(new LoggingHandler(LogLevel.INFO)).
                     childHandler(new ServerInitializer());
 
             // bind port

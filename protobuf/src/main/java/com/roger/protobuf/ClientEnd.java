@@ -9,6 +9,8 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +24,16 @@ public class ClientEnd {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).
+//                    option(ChannelOption.TCP_NODELAY, true).
+//                    handler(new LoggingHandler(LogLevel.INFO)).
                     handler(new ClientInitializer());
 
             // run in async connect
             ChannelFuture channelFuture = bootstrap.connect(host, port).sync();
             // wait for closing socket
             channelFuture.channel().closeFuture().sync();
+        } catch (Exception exp) {
+            exp.printStackTrace();
         } finally {
             eventLoopGroup.shutdownGracefully();
         }
@@ -46,11 +52,15 @@ public class ClientEnd {
 
     public static class ClientHandler extends ChannelInboundHandlerAdapter {
 
+        public ClientHandler() {
+        }
+
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 1; ++i) {
                 ctx.write(request(i));
             }
+            ctx.flush(); // must exist
         }
 
         private UserInfoProto.Person request(int i) {
